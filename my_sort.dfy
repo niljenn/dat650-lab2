@@ -16,23 +16,39 @@ method MySort(a: array<int>)
     ensures sorted(a,0,a.Length)
     ensures Preserved(a,0,a.Length)
 {
-    for i := 0 to a.Length
-        invariant sorted(a,0,i)
+    if a.Length == 0 {
+        return;
+    }
+    for i := 0 to a.Length - 1
+        invariant 0 <= i <= a.Length
         invariant Preserved(a,0,a.Length)
+        invariant sorted(a, 0, i)
+        invariant forall k :: 0 <= k < i ==> forall l :: i <= l < a.Length ==> a[k] <= a[l]
     {
         var minValue := a[i];
         var minPos := i;
         for j := i + 1 to a.Length
-            invariant minPos < a.Length
+            invariant i <= j <= a.Length
+            invariant i <= minPos < a.Length
             invariant a[minPos] == minValue
+            invariant forall k :: i <= k < j ==> a[minPos] <= a[k]
+            invariant sorted(a, 0, i)
+            invariant forall k :: 0 <= k < i ==> forall l :: i <= l < a.Length ==> a[k] <= a[l]
         {
             if a[j] < minValue {
                 minValue := a[j];
                 minPos := j;
             }
         }
-        if i != minPos {
-            a[i], a[minPos] := minValue, a[i];
+        assert forall k :: i <= k < a.Length ==> a[minPos] <= a[k];
+
+        if minPos != i {
+            var tmp := a[i];
+            a[i] := a[minPos];
+            a[minPos] := tmp;
         }
+        assert forall k :: i < k < a.Length ==> a[i] <= a[k];
+        assert forall k :: 0 <= k < i ==> a[k] <= a[i];
+        assert sorted(a, 0, i + 1);
     }
 }
