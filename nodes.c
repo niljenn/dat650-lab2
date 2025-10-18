@@ -19,20 +19,20 @@ struct node *make_nodes(int k)
     //@ requires k >= 0;
     //@ ensures nodes(result, k);
 {
-if (k == 0) {
-    //@ close nodes(0, 0);
-    return 0;
-} else {
-    //@ assert k > 0; 
-    struct node *n = malloc(sizeof(struct node));
-    if (n == 0) abort();
+    if (k == 0) {
+        //@ close nodes(0, 0);
+        return 0;
+    } else {
+        //@ assert k > 0; 
+        struct node *n = malloc(sizeof(struct node));
+        if (n == 0) abort();
 
-    struct node *rest = make_nodes(k - 1);
+        struct node *rest = make_nodes(k - 1);
 
-    n->value = 0;
-    n->next = rest;
+        n->value = 0;
+        n->next = rest;
 
-    //@ close nodes(n, k);
-    return n;
-}
+        //@ close nodes(n, k);
+        return n;
+    }
 }
