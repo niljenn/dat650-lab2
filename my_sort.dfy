@@ -32,8 +32,6 @@ method MySort(a: array<int>)
             invariant i <= minPos < a.Length
             invariant a[minPos] == minValue
             invariant forall k :: i <= k < j ==> a[minPos] <= a[k]
-            invariant sorted(a, 0, i)
-            invariant forall k :: 0 <= k < i ==> forall l :: i <= l < a.Length ==> a[k] <= a[l]
         {
             if a[j] < minValue {
                 minValue := a[j];
